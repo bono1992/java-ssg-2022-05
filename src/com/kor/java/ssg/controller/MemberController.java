@@ -1,18 +1,33 @@
 package com.kor.java.ssg.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import com.kor.java.ssg.dto.Member;
 import com.kor.java.ssg.util.Util;
 
-public class MemberController {
+public class MemberController extends Controller{
 	private Scanner sc;
 	private List<Member> members;
+	private String command;
+	private String actionMethodName;
 	
-	public MemberController(Scanner sc, List<Member> members) {
+	public MemberController(Scanner sc) {
 		this.sc = sc;
-		this.members = members;
+				
+		members = new ArrayList<Member>();
+	}
+	
+	public void doAction(String command, String actionMethodName) {
+		this.command = command;
+		this.actionMethodName = actionMethodName;
+		
+		switch (actionMethodName) {
+		case "join" :
+			doJoin();
+			break;
+		}
 	}
 	
 	private int getMemberindexByLoginId(String loginId) {

@@ -7,17 +7,42 @@ import java.util.Scanner;
 import com.kor.java.ssg.dto.Article;
 import com.kor.java.ssg.util.Util;
 
-public class ArticleController {
+public class ArticleController extends Controller{
 		private Scanner sc;
 		private List<Article> articles;
-
-		public ArticleController(Scanner sc, List<Article> articles) {
-				this.sc = sc;
-				this.articles = articles;
-
-	}
+		private String command;
+		private String actionMethodName;
 		
-		public void doWrite() {
+		public ArticleController(Scanner sc) {
+			this.sc = sc;
+			
+			articles = new ArrayList<Article>();
+		}
+		
+		public void doAction(String command, String actionMethodName) {
+			this.command = command;
+			this.actionMethodName = actionMethodName;
+			
+			switch (actionMethodName) {
+			case "list" :
+				showList();
+				break;
+			case "detail" :
+				showDetail();
+				break;
+			case "modify" :
+				doModify();
+				break;
+			case "delete" :
+				doDelete();
+				break;
+			case "write" :
+				doWrite();
+				break;
+			}
+		}
+
+		private void doWrite() {
 			int id = articles.size() + 1;
 			String regDate = Util.getNowDateStr();
 			System.out.printf("#제목: ");
@@ -31,7 +56,7 @@ public class ArticleController {
 			System.out.printf("*[%d]번 글이 생성되었습니다.*\n", id);
 		}
 		
-		public void showList(String command) {
+		private void showList() {
 			if (articles.size() == 0) {
 				System.out.println("*게시글이 존재하지 않습니다.*");
 				return;
@@ -66,7 +91,7 @@ public class ArticleController {
 			}
 		}
 		
-		public void showDetail(String command) {
+		private void showDetail() {
 			System.out.print("#열람을 원하는 게시글 번호를 입력해주세요. : ");
 			int id = sc.nextInt();
 			
@@ -97,7 +122,7 @@ public class ArticleController {
 		
 		}
 	
-		public void doModify(String command) {
+		private void doModify() {
 			System.out.print("#수정을 원하시는 게시글 번호를 입력해주세요. : ");
 			int id = sc.nextInt();
 			sc.nextLine();
@@ -131,7 +156,7 @@ public class ArticleController {
 			return -1;
 		}
 		
-		public void doDelete(String command) {
+		private void doDelete() {
 			System.out.printf("#삭제를 원하는 게시글을 입력해주세요. : ");
 
 			int id = sc.nextInt();

@@ -1,24 +1,12 @@
 package com.kor.java.ssg;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 import com.kor.java.ssg.controller.ArticleController;
+import com.kor.java.ssg.controller.Controller;
 import com.kor.java.ssg.controller.MemberController;
-import com.kor.java.ssg.dto.Article;
-import com.kor.java.ssg.dto.Member;
-import com.kor.java.ssg.util.Util;
 
 public class App {
-	private List<Article> articles;
-	private List<Member> members;
-
-	public App() {
-		articles = new ArrayList<>();
-		members = new ArrayList<>();
-	}
-
 	public void Start() {
 		System.out.println("=== 프로그램 시작 ===");
 
@@ -26,8 +14,8 @@ public class App {
 
 		Scanner sc = new Scanner(System.in);
 		
-		MemberController memberController = new MemberController(sc, members);
-		ArticleController articleController = new ArticleController(sc, articles);
+		MemberController memberController = new MemberController(sc);
+		ArticleController articleController = new ArticleController(sc);
 
 		// while 문에 넣으면 초기화 됌
 		// LocalDateTime now = LocalDateTime.now();
@@ -48,33 +36,31 @@ public class App {
 				break;
 			}
 			
-			if (command.equals("join")) {
-				memberController.doJoin();
+			String[] commandBits = command.split(" ");
+			
+			if (commandBits.length == 1) {
+				System.out.println("존재하지 않는 명령어 입니다.");
+				continue;
+			}
+		
+			String controllerName = commandBits[0];
+			String actionMethodName = commandBits[1];
+			
+			Controller controller = null;
+			
+			if (controllerName.equals("article")) {
+				controller = articleController;
 			}
 			
-			else if (command.equals("article list")) {
-				articleController.showList(command);
-				}
-
-			else if (command.equals("article write")) {
-				articleController.doWrite();
-				}
-
-			else if (command.equals("article detail")) {
-				articleController.showDetail(command);
-				}
-
-			else if (command.equals("article modify")) {
-				articleController.doModify(command);	
-				}
-
-			else if (command.equals("article delete")) {
-				articleController.doDelete(command);
-				}
-
+			else if (controllerName.equals("member")) {
+				controller = memberController;
+			}
+			
 			else {
 				System.out.printf("[%s](은)는 존재하지 않는 명령어 입니다.\n", command);
 			}
+			
+			controller.doAction(command, actionMethodName);
 		}
 	
 		sc.close();
